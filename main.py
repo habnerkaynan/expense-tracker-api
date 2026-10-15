@@ -53,6 +53,15 @@ def list_expenses(
         return session.exec(query).all()
 
 
+@app.get("/expenses/summary")
+def get_summary():
+    with Session(engine) as session:
+        expenses = session.exec(select(Expense)).all()
+        count = len(expenses)
+        total = sum(expense.amount for expense in expenses)
+        return {"total": total, "count": count}
+
+
 @app.get("/expenses/{expense_id}")
 def get_expense(expense_id: int):
     with Session(engine) as session:

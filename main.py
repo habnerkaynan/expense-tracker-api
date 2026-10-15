@@ -37,9 +37,20 @@ def create_expense(data: ExpenseCreate):
 
 
 @app.get("/expenses")
-def list_expenses():
+def list_expenses(
+    category: str | None = None,
+    start: date | None = None,
+    end: date | None = None,
+):
     with Session(engine) as session:
-        return session.exec(select(Expense)).all()
+        query = select(Expense)
+        if category:
+            query = query.where(Expense.category == category)
+        if start:
+            query = query.where(Expense.spent_on >= start)
+        if end:
+            query = query.where(Expense.spent_on <= end)
+        return session.exec(query).all()
 
 
 @app.get("/expenses/{expense_id}")

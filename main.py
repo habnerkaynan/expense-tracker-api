@@ -6,7 +6,7 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 class ExpenseCreate(SQLModel):
     description: str
-    amount: float
+    amount: float = Field(gt=0)
     category: str
     spent_on: date
 
